@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 9000
 
 # Start the Node.js application
-CMD ["node", "server.js"]  # Replace server.js with your entry point file if different
+CMD ["node", "server.js"] 
