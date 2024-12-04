@@ -4,9 +4,9 @@ const config = require("./config/config");
 const Analytics = require("./models/analyticsModel");
 const InformationModel = require("./models/informationModel");
 const SectionModel = require('./models/sectionModel');
-
+const cors = require('cors'); 
 const app = express();
-
+app.use(cors());
 // mongoose.connect(config.db, { useNewUrlParser: true, useUnifiedTopology: true })
 //   .then(() => console.log("Connected to MongoDB"))
 //   .catch((err) => console.error("Database connection failed:", err));
