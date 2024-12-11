@@ -124,7 +124,7 @@ app.get('/get-list',async (req, res) => {
     res.json(data)
 });
 
-app.post("/login", async (req, res) => {
+app.post("/admin/login", async (req, res) => {
   try {
       const { email, password } = req.body;
 
@@ -154,7 +154,7 @@ app.post("/login", async (req, res) => {
 });
 
 
-app.get("/fetchUser",async (req, res) =>{
+app.get("/admin/fetchUser",async (req, res) =>{
   try{
 
     let data = await User.find({});
