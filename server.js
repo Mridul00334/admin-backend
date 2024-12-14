@@ -5,8 +5,10 @@ const Analytics = require("./models/analyticsModel");
 const InformationModel = require("./models/informationModel");
 const SectionModel = require('./models/sectionModel');
 const User = require("./models/userModel");
+const router = require('./router/index')
 const cors = require('cors'); 
 const app = express();
+
 app.use(cors());
 // mongoose.connect(config.db, { useNewUrlParser: true, useUnifiedTopology: true })
 //   .then(() => console.log("Connected to MongoDB"))
@@ -17,9 +19,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 app.use(express.json());
 
 
-app.get('/', (req, res) => {
-    res.send('Hello from Node.js app!');
-});
+
 app.get('/get-list',async (req, res) => {
     const sections = await SectionModel.find({});
    
@@ -124,47 +124,8 @@ app.get('/get-list',async (req, res) => {
     res.json(data)
 });
 
-app.post("/admin/login", async (req, res) => {
-  try {
-      const { email, password } = req.body;
 
-      // Step 1: Find the user by email
-      const user = await User.findOne({ email });
-      console.log(user)
-      if (!user) {
-          return res.status(404).json({ success: false, message: 'User not found' });
-      }
-
-      // Step 2: Check password (not hashed)
-      if (user.password !== password) {
-          return res.status(401).json({ success: false, message: 'Invalid password' });
-      }
-
-      // Step 3: Check if the user is active
-      if (user.isActive !== 'ACTIVE') {
-          return res.status(403).json({ success: false, message: 'User is not active' });
-      }
-
-    // If everything matches, return success
-    return res.json({ success: true, message: 'Login successful', user });
-  } catch (err) {
-      console.error('Login error:', err);
-      return res.status(500).json({ success: false, message: 'An error occurred during login' });
-  }
-});
-
-
-app.get("/admin/fetchUser",async (req, res) =>{
-  try{
-
-    let data = await User.find({});
-
-    res.json(data);
-
-  }catch(err){
-    console.log(err)
-  }
-})
+app.use("/", router);
 
 
 app.listen(config.port, () => console.log(`Server running on port ${config.port}`));

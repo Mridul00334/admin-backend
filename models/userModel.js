@@ -11,19 +11,18 @@ const userSchema = new mongoose.Schema({
   },
   mobileNumber: {
     type: String,
-    required: true,
     match: [/^\+\d{1,3}\d{4,14}$/, 'Please enter a valid mobile number with country code'],
   },
   countryCode: {
     type: String,
-    required: true,
     match: [/^\+\d{1,4}$/, 'Please enter a valid country code'],
   },
   role: {
     type: String,
     enum: [
       'CUSTOMER', 'PARTNER', 'PARTNER_TEAM', 'DELIVERY_BOY', 'FULFILLMENT',
-      'FULFILLMENT_TEAM', 'ADMIN', 'MANAGER', 'SUPPORT', 'BETA_TESTER'
+      'FULFILLMENT_TEAM', 'ADMIN', 'MANAGER', 'SUPPORT', 'BETA_TESTER',
+      'EMPLOYEES'
     ],
     required: true,
   },
@@ -35,8 +34,16 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
     minlength: 12, // You can adjust the password length requirement
+  },
+  accessType: {
+    type: String,
+    enum: ['OWNER', 'EDITOR', 'VIEWER'],
+    required: true,
+  },
+  restrictedFeatures: {
+    type: [String],  // Array of strings
+    default: [],     // Default to an empty array if no restricted features are provided
   },
   lastOnline: {
     type: Date,
