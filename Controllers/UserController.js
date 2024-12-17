@@ -3,7 +3,10 @@ const Analytics = require("../models/analyticsModel");
 const InformationModel = require("../models/informationModel");
 const SectionModel = require('../models/sectionModel');
 const User = require("../models/userModel");
+<<<<<<< HEAD
 const Profile = require("../models/profileModel");
+=======
+>>>>>>> 229cc116130a0dbaa77f406827199dade8adc3ad
 const bcrypt = require('bcryptjs');
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SMS_API_KEY);
@@ -65,8 +68,11 @@ exports.fetchUser = async (req, res) =>{
   }
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 229cc116130a0dbaa77f406827199dade8adc3ad
 exports.submitUser = async (req, res) =>{
   try{
 
