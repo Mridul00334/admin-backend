@@ -8,11 +8,7 @@ const User = require("./models/userModel");
 const router = require('./router/index')
 const cors = require('cors'); 
 const app = express();
-<<<<<<< HEAD
 const bcrypt = require('bcryptjs');
-=======
-
->>>>>>> 229cc116130a0dbaa77f406827199dade8adc3ad
 app.use(cors());
 // mongoose.connect(config.db, { useNewUrlParser: true, useUnifiedTopology: true })
 //   .then(() => console.log("Connected to MongoDB"))
