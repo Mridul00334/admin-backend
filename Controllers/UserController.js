@@ -26,9 +26,7 @@ exports.loginUser = async (req, res) => {
       if (!user) {
           return res.status(404).json({ success: false, message: 'User not found' });
       }
-
       
-
       // Step 2: Check password (not hashed)
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
@@ -142,8 +140,9 @@ sgMail
 
 
 exports.getProfileByUserId = async (req, res) => {
-  let {userId} = req.body;
- 
+  
+  let {userId} = req.user;
+  
     Profile.findOne({ userId: userId })  // Searching for profile by userId
       .then(profile => {
         if (!profile) {
