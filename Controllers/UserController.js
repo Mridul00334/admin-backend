@@ -350,4 +350,53 @@ exports.getProfileByUserId = async (req, res) => {
       });
   };
 
+
+  exports.updateProfileByUserId = async (req, res) => {
+    let { userId } = req.user;  // Extract the userId from the authenticated user
+    const { data } = req.body;  // Extract the data array from the request body
+    
+    // Initialize an object to hold the fields to be updated
+    const profileData = {};
+  
+    try {
+      // Iterate over the provided data and build the profileData object
+      data.forEach(item => {
+        const { key, value } = item;  // Extract key and value from each item
+  
+        // Add the key-value pair to profileData if value is provided
+        if (value !== undefined) {
+          // Handle date fields by converting to a Date object (if applicable)
+          if (key === 'dob' && value) {
+            profileData[key] = new Date(value); // Convert date string to Date object
+          } else {
+            profileData[key] = value;  // Add other fields directly
+          }
+        }
+      });
+  
+      // Use findOneAndUpdate with upsert: true to either update or create the profile
+      const result = await Profile.findOneAndUpdate(
+        { userId: userId },  // Search by userId
+        { $set: profileData },  // Update only the fields provided in the request body
+        { new: true, upsert: true } // Options: return updated document, create if doesn't exist
+      );
+  
+      // Return a successful response with the updated profile data
+      return res.status(200).json({
+        message: "SUCCESS",
+        data: result
+      });
+  
+    } catch (err) {
+      console.error('Error updating profile:', err);
+      return res.status(500).json({
+        message: "ERROR",
+        data: "Error updating profile"
+      });
+    }
+  };
+  
+  
+  
+  
   
