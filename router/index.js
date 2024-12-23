@@ -8,5 +8,5 @@ router.get("/admin/fetchUser",fetchUser);
 router.post("/admin/submitUser",submitUser);
 router.post("/admin/getprofile", authenticateToken,getProfileByUserId)
 router.post("/admin/getList", authenticateToken,getList)
-router.patch("/admin/updateProfile",authenticateToken,updateProfileByUserId)
+router.patch("/admin/updateProfile", authenticateToken,updateProfileByUserId)
 module.exports = router;
