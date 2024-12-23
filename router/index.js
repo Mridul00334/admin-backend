@@ -3,10 +3,10 @@ const { fetchUser,submitUser,loginUser,getProfileByUserId,getList,updateProfileB
 const { authenticateToken } = require("../auth/auth");
 const router = express.Router();
 
-router.post("/admin/login", loginUser);
+router.post("/admin/login",loginUser);
 router.get("/admin/fetchUser",fetchUser);
 router.post("/admin/submitUser",submitUser);
-router.post("/admin/getprofile", authenticateToken, getProfileByUserId)
+router.post("/admin/getprofile", authenticateToken,getProfileByUserId)
 router.post("/admin/getList", authenticateToken,getList)
 router.patch("/admin/updateProfile",authenticateToken,updateProfileByUserId)
 module.exports = router;
