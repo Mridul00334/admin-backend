@@ -353,26 +353,29 @@ exports.getProfileByUserId = async (req, res) => {
 
   exports.updateProfileByUserId = async (req, res) => {
     let { userId } = req.user;  // Extract the userId from the authenticated user
-    const { data } = req.body;  // Extract the data array from the request body
-    
+    const { firstName, lastName, profession, qualification, specialization, professionExperience, interests, images, dob, homeTown, language } = req.body; // Extract fields from the request body
+  
     // Initialize an object to hold the fields to be updated
     const profileData = {};
   
     try {
-      // Iterate over the provided data and build the profileData object
-      data.forEach(item => {
-        const { key, value } = item;  // Extract key and value from each item
+      // Build the profileData object with the provided fields
+      if (firstName !== undefined) profileData.firstName = firstName;
+      if (lastName !== undefined) profileData.lastName = lastName;
+      if (profession !== undefined) profileData.profession = profession;
+      if (qualification !== undefined) profileData.qualification = qualification;
+      if (specialization !== undefined) profileData.specialization = specialization;
+      if (professionExperience !== undefined) profileData.professionExperience = professionExperience;
+      if (interests !== undefined) profileData.interests = interests;
+      if (images !== undefined) profileData.images = images;
   
-        // Add the key-value pair to profileData if value is provided
-        if (value !== undefined) {
-          // Handle date fields by converting to a Date object (if applicable)
-          if (key === 'dob' && value) {
-            profileData[key] = new Date(value); // Convert date string to Date object
-          } else {
-            profileData[key] = value;  // Add other fields directly
-          }
-        }
-      });
+      // Handle the date of birth field
+      if (dob !== undefined) {
+        profileData.dob = new Date(dob);  // Convert date string to Date object
+      }
+  
+      if (homeTown !== undefined) profileData.homeTown = homeTown;
+      if (language !== undefined) profileData.language = language;
   
       // Use findOneAndUpdate with upsert: true to either update or create the profile
       const result = await Profile.findOneAndUpdate(
@@ -395,7 +398,6 @@ exports.getProfileByUserId = async (req, res) => {
       });
     }
   };
-  
   
   
   
