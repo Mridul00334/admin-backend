@@ -257,7 +257,8 @@ exports.getProfileByUserId = async (req, res) => {
   
         // Formatting the profile data into the desired response format
         const response = {
-          message: "SUCCESS",
+          status: "SUCCESS",
+          message : "Data fetched",
           data: [
             {
               label: "First Name",
