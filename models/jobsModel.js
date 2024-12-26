@@ -1,98 +1,88 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const jobSchema = new Schema({
+// Define the schema
+const jobPostSchema = new Schema({
   section_id: {
-    type: mongoose.Schema.Types.ObjectId, // Using ObjectId for job_id
-    default: mongoose.Types.ObjectId,     
+    type: Schema.Types.ObjectId,  // Assuming this references another collection
+    required: true
   },
   partner_id: {
-    type: mongoose.Schema.Types.ObjectId, 
-    default: mongoose.Types.ObjectId,     
-  },
-  user_id: {
-    type: String,
-    required: true, // Assuming this is the user ID
+    type: String,  // The partner_id is a string (e.g., 'partner_123')
+    required: true
   },
   status: {
     type: String,
-    enum: ['IN-REVIEW', 'IN-PROGRESS', 'EXPIRED'],
-    required: true,
+    enum: ['IN-PROGRESS', 'OPEN', 'CLOSED'],  // Assuming 'IN-PROGRESS' is one of the possible statuses
+    required: true
   },
   job_title: {
     type: String,
-    required: true,
+    required: true
   },
   company_name: {
     type: String,
-    required: true,
+    required: true
   },
   work_experience: {
-    type: String, // Can store values like '1-2 years', '5 years', etc.
-    required: true,
+    type: String,  // Range of years (e.g., "3-5 years")
+    required: true
   },
   job_level: {
-    type: String,
-    enum: ['Entry-Level', 'Mid-Level', 'Senior-Level'],
-    required: true,
+    type: String,  // Job level (e.g., "Mid-Level")
+    required: true
   },
-  job_description: [{
-    type: String, // Array to hold multiple paragraphs or points in the job description
-  }],
+  job_description: {
+    type: String,  // Array of strings for job description
+    required: true
+  },
   job_type: {
-    type: String,
-    enum: ['Full-Time', 'Part-Time', 'Internship', 'Contract'],
-    required: true,
+    type: String,  // Type of job (e.g., "Full-Time")
+    required: true
   },
   salary: {
-    type: Schema.Types.Decimal128, // This stores the decimal value for salary
-    required: true,
-  },
-  salary_currency: {
-    type: String, // Store the currency symbol, e.g., USD, EUR, etc.
-    required: true,
+    type: String,  // MongoDB Decimal128 type for precise money representation
+    required: true
   },
   visa_requirement: {
-    type: String,
-    enum: ['H1b', 'CPT', 'Dynamic'],
-    required: true,
+    type: [String],  // Visa requirement (e.g., 'H1b')
+    required: true
   },
   country: {
-    type: String,
-    required: true,
+    type: String,  // Country of job (e.g., 'USA')
+    required: true
   },
   city: {
-    type: String,
-    required: true,
+    type: String,  // City of job (e.g., 'New York')
+    required: true
   },
   location_type: {
-    type: String,
-    enum: ['On-site', 'Remote'],
-    required: true,
+    type: [String],  // Type of job location (e.g., 'On-site')
+    required: true
   },
   job_posted_at: {
-    type: Date,
-    required: true,
+    type: Date,  // Job posted date (MongoDB Date format)
+    required: true
   },
   job_expiry_date: {
-    type: Date,
-    required: true,
+    type: Date,  // Job expiry date (MongoDB Date format)
+    required: true
   },
-  created_date: {
+  createdDate: {
     type: Date,
-    default: Date.now, // Automatically set the creation date
+    default: Date.now
   },
-  updated_date: {
+  updatedDate: {
     type: Date,
-    default: Date.now, // Automatically set the update date, can be updated during updates
+    default: Date.now
   },
+  user_id: {
+    type: Schema.Types.ObjectId,  // Assuming this references another collection (e.g., a user)
+    required: true
+  }
 });
 
-// Optionally, create indexes on frequently queried fields for optimization
+// Create the model
+const JobPost = mongoose.model('JobPost', jobPostSchema);
 
-jobSchema.index({ partner_id: 1 });
-jobSchema.index({ job_expiry_date: 1 });
-
-const Job = mongoose.model('Job', jobSchema);
-
-module.exports = Job;
+module.exports = JobPost;
