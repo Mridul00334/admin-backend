@@ -13,7 +13,7 @@ const jobPostSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['IN-PROGRESS', 'OPEN', 'CLOSED'],  // Assuming 'IN-PROGRESS' is one of the possible statuses
+    enum: ['IN-REVIEW', 'OPEN', 'CLOSED'],  // Assuming 'IN-PROGRESS' is one of the possible statuses
     required: true
   },
   job_title: {
@@ -33,7 +33,7 @@ const jobPostSchema = new Schema({
     required: true
   },
   job_description: {
-    type: String,  // Array of strings for job description
+    type: [String],  // Array of strings for job description
     required: true
   },
   job_type: {
