@@ -13,14 +13,14 @@ exports.getJobsList = async (req, res) =>{
 
     let data =  await Jobs.find({});
     res.status(200).json({
-        status:"Success",
+        status:"SUCCESS",
         message:"Data fetched",
         data:data
     })
     
    }catch(err){
     res.status(500).json({
-        status:"Failure",
+        status:"FALIURE",
         message:"error"
     });
    }

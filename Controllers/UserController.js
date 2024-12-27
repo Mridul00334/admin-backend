@@ -194,7 +194,7 @@ exports.submitUser = async (req, res) =>{
     await sendEmail(email, password);
     // Send a success response with the saved user
     res.status(201).json({
-      status:"Success",
+      status:"SUCCESS",
       message: "User created successfully",
       user: savedUser
     });
@@ -202,7 +202,7 @@ exports.submitUser = async (req, res) =>{
   }catch(err){
     console.log(err)
     res.status(500).json({
-        status:"Failed",
+        status:"FAILED",
         message: "Some error occured"
       });
   }
