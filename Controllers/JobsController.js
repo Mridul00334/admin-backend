@@ -6,6 +6,7 @@ const SectionModel = require('../models/sectionModel');
 const User = require("../models/userModel");
 const Profile = require("../models/profileModel");
 const Jobs = require("../models/jobsModel");
+const JobApplication = require('../models/jobApplicationModel');
 const JobDescription = require('../models/jobDescriptionModel');
 const mongoose = require('mongoose');
 exports.getJobsList = async (req, res) =>{
@@ -114,4 +115,50 @@ exports.getJobsList = async (req, res) =>{
     });
   }
 }
+
+exports.createJobApplication=async(req,res)=>{
+ let{ jobId, profileId, applicationStatus, interviewDate = null}=req.body;
+ 
+
+// Function to create a job application
+    try {
+        // Check if the job exists
+        const job = await Jobs.findById(jobId);
+        if (!job) {
+            throw new Error('Job not found');
+        }
+
+        // Check if the profile exists
+        const profile = await Profile.findById(profileId);
+        if (!profile) {
+            throw new Error('Profile not found');
+        }
+
+        // Create the job application document
+        const newJobApplication = new JobApplication({
+            job_id: jobId,
+            profile_id: profileId,
+            application_status: applicationStatus,
+            interview_date: interviewDate,
+            application_date: new Date(),
+            created_at: new Date(),
+            updated_at: new Date()
+        });
+
+        // Save the job application to the database
+        await newJobApplication.save();
+
+        res.json( {
+            success: "SUCCESS",
+            message: 'Create Job Application',
+            application: newJobApplication
+        });
+    } catch (error) {
+        res.json( {
+            success: "FAILURE",
+            message: error.message
+        });
+    }
+};
+
 
