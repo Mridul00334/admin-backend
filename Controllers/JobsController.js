@@ -103,7 +103,7 @@ exports.getJobsList = async (req, res) =>{
      res.json({
       status: 'SUCCESS',
       message: 'Data fetched',
-      data: jobDetails // Assuming you are fetching a single job, so we return the first element
+      data: jobDetails[0] // Assuming you are fetching a single job, so we return the first element
     });
   } catch (error) {
     console.error('Error fetching job details:', error);
