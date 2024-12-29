@@ -1,6 +1,6 @@
 const express = require("express");
 const { fetchUser,submitUser,loginUser,getProfileByUserId,getList,updateProfileByUserId } = require("../Controllers/UserController");
-const {getJobsList,getJobDescription,createJobApplication}= require("../Controllers/JobsController");
+const {getJobsList,getJobDescription,createJobApplication,createNewJob}= require("../Controllers/JobsController");
 const { authenticateToken } = require("../auth/auth");
 const router = express.Router();
 
@@ -13,4 +13,5 @@ router.patch("/admin/updateProfile", authenticateToken,updateProfileByUserId)
 router.post("/admin/getJobList",authenticateToken,getJobsList)
 router.post("/admin/getJobDescription",authenticateToken,getJobDescription)
 router.post("/admin/createJobApplication",authenticateToken,createJobApplication)
+router.post("/admin/createNewJob",authenticateToken,createNewJob)
 module.exports = router;

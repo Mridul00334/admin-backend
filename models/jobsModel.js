@@ -5,11 +5,11 @@ const Schema = mongoose.Schema;
 const jobPostSchema = new Schema({
   section_id: {
     type: Schema.Types.ObjectId,  // Assuming this references another collection
-    required: true
+    required: false
   },
   partner_id: {
     type: String,  // The partner_id is a string (e.g., 'partner_123')
-    required: true
+    required: false
   },
   status: {
     type: String,

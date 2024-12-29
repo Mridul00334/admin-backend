@@ -162,3 +162,34 @@ exports.createJobApplication=async(req,res)=>{
 };
 
 
+exports.createNewJob = async (req, res) => {
+  try {
+    const { section_id, partner_id, ...jobData } = req.body;
+    const {userId} = req.user;
+
+    // Ensure section_id and partner_id are not required if they are null
+    if (!section_id) jobData.section_id = null;
+    if (!partner_id) jobData.partner_id = null;
+    if(userId) jobData.user_id= userId;
+
+    // Create a new job post
+    const newJob =  new Jobs(jobData);
+
+    // Save the new job post to the database
+    await newJob.save();
+
+    // Send success response with the created job
+    res.status(201).json({
+      message: 'Job created successfully',
+      job: newJob
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: 'Error creating job post',
+      error: error.message
+    });
+  }
+};
+
+
