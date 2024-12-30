@@ -193,3 +193,43 @@ exports.createNewJob = async (req, res) => {
 };
 
 
+exports.updateJob = async (req, res) => {
+  try {
+    const { jobId } = req.params;  // Get jobId from URL parameter
+    const { section_id, partner_id, ...jobData } = req.body;  // Get the data from the request body
+    const { userId } = req.user;  // Get userId from the authenticated user
+
+    // Ensure section_id and partner_id are not required if they are null
+    if (!section_id) jobData.section_id = null;
+    if (!partner_id) jobData.partner_id = null;
+    if (userId) jobData.user_id = userId;  // Set user_id if provided by auth
+
+    // Find and update the job by its ID
+    const updatedJob = await Jobs.findByIdAndUpdate(
+      jobId,  // The job ID to update
+      { $set: jobData },  // The new job data to update
+      { new: true, runValidators: true }  // Return the updated job and run validation on the updated data
+    );
+
+    // Check if job exists
+    if (!updatedJob) {
+      return res.status(404).json({
+        message: 'Job not found'
+      });
+    }
+
+    // Send success response with the updated job
+    res.status(200).json({
+      status:"SUCCESS",
+      message: 'Job updated successfully',
+      job: updatedJob
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status:"FALIURE",
+      message: 'Error updating job post',
+      error: error.message
+    });
+  }
+};
