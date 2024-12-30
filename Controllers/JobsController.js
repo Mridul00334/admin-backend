@@ -149,13 +149,13 @@ exports.createJobApplication=async(req,res)=>{
         await newJobApplication.save();
 
         res.json( {
-            success: "SUCCESS",
+            status: "SUCCESS",
             message: 'Create Job Application',
             application: newJobApplication
         });
     } catch (error) {
         res.json( {
-            success: "FAILURE",
+            staus: "FAILURE",
             message: error.message
         });
     }
