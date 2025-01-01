@@ -233,3 +233,51 @@ exports.updateJob = async (req, res) => {
     });
   }
 };
+
+
+// Get all profiles that are associated with job applications
+exports.getApplicantsList = async (req,res) => {
+  try {
+    const profiles = await JobApplication.aggregate([
+      {
+        $lookup: {
+          from: 'profiles', // The collection name for Profile in lowercase
+          localField: 'profile_id', // The field in JobApplication referencing Profile
+          foreignField: '_id', // The field in Profile that matches localField
+          as: 'profile' // The alias for the joined Profile document
+        }
+      },
+      {
+        $unwind: '$profile' // Deconstruct the array of profiles into individual documents
+      },
+      {
+        $project: { // Select the fields you want to return from the joined Profile
+          firstName: '$profile.firstName',
+          lastName: '$profile.lastName',
+          profession: '$profile.profession',
+          qualification: '$profile.qualification',
+          specialization: '$profile.specialization',
+          professionExperience: '$profile.professionExperience',
+          interests: '$profile.interests',
+          images: '$profile.images',
+          dob: '$profile.dob',
+          homeTown: '$profile.homeTown',
+          language: '$profile.language',
+          userId: '$profile.userId',
+          job_id:1,
+          application_status: 1, // Include job application status
+          application_date: 1, // Include job application date
+          interview_date: 1 // Include interview date if available
+        }
+      }
+    ]);
+
+    console.log(profiles); // Log the result
+    res.json({status:"SUCCESS",message:"data fetched",data:profiles}); // Return the result
+  } catch (err) {
+    console.error('Error fetching profiles:', err); // Error handling
+    res.json({status:"FAILURE",message:err}); // Throw error for further handling
+  }
+};
+
+
