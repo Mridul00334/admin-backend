@@ -236,9 +236,14 @@ exports.updateJob = async (req, res) => {
 
 
 // Get all profiles that are associated with job applications
-exports.getApplicantsList = async (req,res) => {
+exports.getApplicantsList = async (req, res) => {
   try {
+    const { jobId } = req.body; // Assuming the jobId is passed in the request URL as a parameter
+  
     const profiles = await JobApplication.aggregate([
+      {
+        $match: { job_id: new mongoose.Types.ObjectId(jobId) } // Match job_id with the provided jobId in the request
+      },
       {
         $lookup: {
           from: 'profiles', // The collection name for Profile in lowercase
@@ -264,7 +269,7 @@ exports.getApplicantsList = async (req,res) => {
           homeTown: '$profile.homeTown',
           language: '$profile.language',
           userId: '$profile.userId',
-          job_id:1,
+          job_id: 1,
           application_status: 1, // Include job application status
           application_date: 1, // Include job application date
           interview_date: 1 // Include interview date if available
@@ -273,10 +278,10 @@ exports.getApplicantsList = async (req,res) => {
     ]);
 
     console.log(profiles); // Log the result
-    res.json({status:"SUCCESS",message:"data fetched",data:profiles}); // Return the result
+    res.json({ status: "SUCCESS", message: "Data fetched", data: profiles }); // Return the result
   } catch (err) {
     console.error('Error fetching profiles:', err); // Error handling
-    res.json({status:"FAILURE",message:err}); // Throw error for further handling
+    res.json({ status: "FAILURE", message: err }); // Throw error for further handling
   }
 };
 

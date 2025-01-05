@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 // Define the schema for the InformationModel
 const informationModelSchema = new mongoose.Schema({
-  Information_ID: { type: String, required: true },
   title: { type: String, required: true },
   subTitle: { type: String, required: true },
   description: { type: String, required: true },

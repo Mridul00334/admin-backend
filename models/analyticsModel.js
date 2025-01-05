@@ -2,20 +2,19 @@ const mongoose = require('mongoose');
 
 // Define the schema for impressionTag
 const impressionTagSchema = new mongoose.Schema({
-  type_name: { type: String, required: true },
-  ID: { type: String, required: true },
-  NAME: { type: String, required: true },
+  type_name: { type: String, required: false },
+  ID: { type: String, required: false },
+  NAME: { type: String, required: false },
 });
 
 // Define the schema for FireBase_Remote_Config
 const fireBaseRemoteConfigSchema = new mongoose.Schema({
-  featureEnabled: { type: Boolean, required: true },
-  colorScheme: { type: String, required: true }
+  featureEnabled: { type: Boolean, required: false },
+  colorScheme: { type: String, required: false }
 });
 
 // Define the Analytics schema
 const analyticsSchema = new mongoose.Schema({
-  Analytics_ID: { type: String, required: true },
   impressionTag: { type: impressionTagSchema, required: true },
   FireBase_Remote_Config: { type: fireBaseRemoteConfigSchema, required: true },
   Keywords: { type: [String], required: true },
