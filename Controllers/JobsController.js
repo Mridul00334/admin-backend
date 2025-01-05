@@ -180,12 +180,14 @@ exports.createNewJob = async (req, res) => {
 
     // Send success response with the created job
     res.status(201).json({
+      status:"SUCCESS",
       message: 'Job created successfully',
       job: newJob
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
+      status:"FAILURE",
       message: 'Error creating job post',
       error: error.message
     });
