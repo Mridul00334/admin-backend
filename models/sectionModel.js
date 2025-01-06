@@ -18,6 +18,7 @@ const sectionModelSchema = new mongoose.Schema({
     enum: ['DEPARTMENT', 'CATEGORY', 'SUB-CATEGORY-L1', 'SUB-CATEGORY-L2', 'SUB-CATEGORY-L3', 'SUB-CATEGORY-L4'],
     required: true
   },
+  childrenId: {type:Schema.Types.ObjectId, required: false},
   createdDate: { type: Date, default: Date.now }, // Automatically set the creation date
   updatedDate: { type: Date, default: Date.now }, // Automatically set the updated date
 });

@@ -402,62 +402,79 @@ exports.updateProfileByUserId = async (req, res) => {
 
 
 exports.addCategory = async (req, res) => {
-  try{
-  let {
-    title,
-    subtitle,
-    analyticsEvents,
-    restrictedCountries,
-    enabled,
-    imageURL,
-    description
-  } = req.body;
+  try {
+    let {
+      title,
+      subtitle,
+      analyticsEvents,
+      restrictedCountries,
+      enabled,
+      imageURL,
+      description,
+      parentKey
+    } = req.body;
 
-  let infodata = new InformationModel({
-    title,
-    subTitle:subtitle,
-    description,
-    Flag: "Active",
-    mediaURL: imageURL,
-    isVideo: false,
-    isEnabled: enabled
-  })
-  const info = await infodata.save();
+    let infodata = new InformationModel({
+      title,
+      subTitle: subtitle,
+      description,
+      Flag: "Active",
+      mediaURL: imageURL,
+      isVideo: false,
+      isEnabled: enabled
+    })
+    const info = await infodata.save();
 
-  const analytics = new Analytics({
-    impressionTag: {},
-    FireBase_Remote_Config: {},
-    Keywords: [],
-    views: 0,
-    orders: 0,
-    priority: 1
-  });
+    const analytics = new Analytics({
+      impressionTag: {},
+      FireBase_Remote_Config: {},
+      Keywords: [],
+      views: 0,
+      orders: 0,
+      priority: 1
+    });
 
-  const analytic = await analytics.save();
+    const analytic = await analytics.save();
+    let section;
+    if (parentKey) {
+       section = new SectionModel({
+        Section_ID: title,
+        Information_ID: info._id,
+        Analytics_ID: analytic._id,
+        restrictCountry: restrictedCountries,
+        createdBy: {
+          firstName: "",
+          lastName: ""
+        },
+        type: 'CATEGORY',
+        childrenId:parentKey
+      });
+    } else {
+       section = new SectionModel({
+        Section_ID: title,
+        Information_ID: info._id,
+        Analytics_ID: analytic._id,
+        restrictCountry: restrictedCountries,
+        createdBy: {
+          firstName: "",
+          lastName: ""
+        },
+        type: 'CATEGORY'
+      });
+    }
 
- const section= new SectionModel({
-    Section_ID: title,
-    Information_ID: info._id,
-    Analytics_ID: analytic._id,
-    restrictCountry: restrictedCountries,
-    createdBy: {
-      firstName: "",
-      lastName: ""
-    },
-    type: 'CATEGORY'
-  });
-  console.log(section)
-const result = await section.save();
-res.status(200).json({
-  status:"SUCCESS",
-  message:"data update",
-  data:result
-});
-  }catch(err){
+    console.log(section)
+    const result = await section.save();
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "data update",
+      data: result
+    });
+  } catch (err) {
     res.status(500).json({
-      status:"SUCCESS",
-      message:"data update",
-      data:err
+      status: "SUCCESS",
+      message: "data update",
+      data: err
     });
   }
 }
