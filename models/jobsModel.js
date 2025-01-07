@@ -32,10 +32,6 @@ const jobPostSchema = new Schema({
     type: String,  // Job level (e.g., "Mid-Level")
     required: true
   },
-  job_description: {
-    type: [String],  // Array of strings for job description
-    required: true
-  },
   job_type: {
     type: String,  // Type of job (e.g., "Full-Time")
     required: true

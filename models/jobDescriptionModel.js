@@ -2,16 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 // Job Description Schema
-const JobDescSchema = new Schema({
-  sub_title: {
-    type: String,
-    required: true
-  },
-  description: {
-    type: String,
-    required: true
-  }
-});
+
 
 // Main Job Schema
 const JobDescriptionSchema = new Schema({
@@ -21,7 +12,7 @@ const JobDescriptionSchema = new Schema({
     unique: true // Ensures each job has a unique ID
   },
   job_description: {
-    type: [JobDescSchema],
+    type: [String],
     required: true // Ensures that job descriptions are provided
   }
 });

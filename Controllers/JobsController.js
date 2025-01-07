@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 exports.getJobsList = async (req, res) =>{
    try{
 
-    let data =  await Jobs.find({});
+    let data =  await Jobs.find({},{ job_description: 0,createdDate:0,updatedDate:0 });
     res.status(200).json({
         status:"SUCCESS",
         message:"Data fetched",
@@ -164,20 +164,23 @@ exports.createJobApplication=async(req,res)=>{
 
 exports.createNewJob = async (req, res) => {
   try {
-    const { section_id, partner_id, ...jobData } = req.body;
+    const { section_id, partner_id,job_description, ...jobData } = req.body;
     const {userId} = req.user;
 
     // Ensure section_id and partner_id are not required if they are null
     if (!section_id) jobData.section_id = null;
     if (!partner_id) jobData.partner_id = null;
     if(userId) jobData.user_id= userId;
+   
 
     // Create a new job post
     const newJob =  new Jobs(jobData);
 
     // Save the new job post to the database
-    await newJob.save();
+    let job = await newJob.save();
 
+    const newJobDesc = new JobDescription({job_description,job_id:job._id})
+    await newJobDesc.save();
     // Send success response with the created job
     res.status(201).json({
       status:"SUCCESS",
