@@ -29,7 +29,7 @@ exports.getJobsList = async (req, res) =>{
 
 
 
-  exports.getJobDescription= async(req,res)=>{
+exports.getJobDescription= async(req,res)=>{
     console.log(req.body);
     let {jobId} = req.body;
   try {

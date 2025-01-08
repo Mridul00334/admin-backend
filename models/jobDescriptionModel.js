@@ -12,7 +12,7 @@ const JobDescriptionSchema = new Schema({
     unique: true // Ensures each job has a unique ID
   },
   job_description: {
-    type: [String],
+    type: String,
     required: true // Ensures that job descriptions are provided
   }
 });
