@@ -67,23 +67,19 @@ exports.getList = async (req, res) => {
       // Stage 7: Project the desired fields (optional)
       {
         $project: {
-          _id: 1,                        // Keep the parent `_id`
-          Section_ID: 1,                 // Keep the `Section_ID` of the parent
-          Information_ID: 1,             // Keep the `Information_ID` of the parent
-          Analytics_ID: 1,               // Keep the `Analytics_ID` of the parent
-          restrictCountry: 1,            // Keep the `restrictCountry` of the parent
-          createdBy: 1,                  // Keep the `createdBy` of the parent
+          _id: 1,                        // Keep the parent `_id`                           // Keep the `createdBy` of the parent
           type: 1,                       // Keep the `type` of the parent
           childrenId: 1,                   // Keep the children
-          informationDetails: 1,         // Keep the information details
-          analyticsDetails: 1,       // Keep the analytics details
+          title:"$informationDetails.title", 
+          description:"$informationDetails.description",
+          isEnabled:"$informationDetails.isEnabled",
+          image:"$informationDetails.mediaURL",       // Keep the information details      // Keep the analytics details
           isRestricted: 1
 
         }
       }
     ]
     );
-
 
 
     const idMap = result.reduce((acc, item) => {
@@ -108,7 +104,7 @@ exports.getList = async (req, res) => {
     const data = result.filter(item => !item.childrenId);
 
 
-    res.json(data)
+    res.json({status:"SUCCESS",message:"data fetched", data:data})
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "some error occured" })
