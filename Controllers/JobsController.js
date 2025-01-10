@@ -201,7 +201,7 @@ exports.createNewJob = async (req, res) => {
 exports.updateJob = async (req, res) => {
   try {
     const { jobId } = req.params;  // Get jobId from URL parameter
-    const { section_id, partner_id, ...jobData } = req.body;  // Get the data from the request body
+    const { section_id, partner_id,job_description, ...jobData } = req.body;  // Get the data from the request body
     const { userId } = req.user;  // Get userId from the authenticated user
 
     // Ensure section_id and partner_id are not required if they are null
@@ -216,6 +216,29 @@ exports.updateJob = async (req, res) => {
       { new: true, runValidators: true }  // Return the updated job and run validation on the updated data
     );
 
+
+    const newJobDesc = await JobDescription.findOneAndUpdate(
+      { job_id: jobId }, // Find by jobId
+      {
+        $set: {
+          job_id: jobId,
+          job_description: job_description
+        }
+      },
+      {
+        new: true,  // Return the updated document
+        runValidators: true, // Validate before saving
+        upsert: true  // If no document is found, create a new one
+      })
+
+      if (newJobDesc) {
+        console.log('Job description updated or created:', newJobDesc);
+      } else {
+        console.log('Failed to update or create job description.');
+      }
+
+     
+   
     // Check if job exists
     if (!updatedJob) {
       return res.status(404).json({
