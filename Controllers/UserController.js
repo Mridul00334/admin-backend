@@ -390,7 +390,8 @@ exports.updateProfileByUserId = async (req, res) => {
 
     // Return a successful response with the updated profile data
     return res.status(200).json({
-      message: "SUCCESS",
+      status:"SUCCESS",
+      message: "update the data",
       data: result
     });
 
