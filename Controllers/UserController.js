@@ -240,12 +240,7 @@ async function sendEmail(userEmail, userPassword) {
 exports.getProfileByUserId = async (req, res) => {
 
   let { userId } = req.user;
-  await Profile.updateMany(
-    {},  // This means update all documents in the collection
-    { 
-      $set: { resume: null }  // Initialize the 'resume' field with null or a default value
-    }
-  );
+  
 
   Profile.findOne({ userId: userId })  // Searching for profile by userId
     .then(profile => {
@@ -377,7 +372,7 @@ exports.updateProfileByUserId = async (req, res) => {
     if (professionExperience !== undefined) profileData.professionExperience = professionExperience;
     if (interests !== undefined) profileData.interests = interests;
     if (images !== undefined) profileData.images = images;
-
+    
     // Handle the date of birth field
     if (dob !== undefined) {
       profileData.dob = new Date(dob);  // Convert date string to Date object
