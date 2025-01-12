@@ -59,6 +59,11 @@ const profileSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', // Reference to the User schema
     required: true
+  },
+  resume: {
+    type: String, 
+    required: false,
+    default:null
   }
 });
 

@@ -240,6 +240,12 @@ async function sendEmail(userEmail, userPassword) {
 exports.getProfileByUserId = async (req, res) => {
 
   let { userId } = req.user;
+  await Profile.updateMany(
+    {},  // This means update all documents in the collection
+    { 
+      $set: { resume: null }  // Initialize the 'resume' field with null or a default value
+    }
+  );
 
   Profile.findOne({ userId: userId })  // Searching for profile by userId
     .then(profile => {
@@ -331,7 +337,13 @@ exports.getProfileByUserId = async (req, res) => {
               "Russian"
             ],
             value: profile.language || []
-          }
+          },
+            {
+              label: "Resume",
+              key: "Resume",
+              type: "filePicker",
+              value: profile.resume || null
+            }
         ]
       };
 
