@@ -14,11 +14,6 @@ const JobDescriptionSchema = new Schema({
   job_description: {
     type: String,
     required: true // Ensures that job descriptions are provided
-  },
-  apply_status:{
-    type: Boolean,
-    required: true ,
-    default:false
   }
 });
 

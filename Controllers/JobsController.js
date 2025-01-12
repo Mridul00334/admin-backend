@@ -112,7 +112,8 @@ exports.getJobDescription= async(req,res)=>{
       // Handle the case where no profile was found
       console.log('Profile not found');
     }
-    jobDetails[0].application_status= jobApplications.application_status ? jobApplications.application_status:false;
+    
+    jobDetails[0].application_status= jobApplications?.application_status ? jobApplications?.application_status:false;
      res.json({
       status: 'SUCCESS',
       message: 'Data fetched',
