@@ -151,7 +151,7 @@ exports.createJobApplication=async(req,res)=>{
         // Create the job application document
         const newJobApplication = new JobApplication({
             job_id: jobId,
-            profile_id: profileId,
+            profile_id: profile._id,
             application_status: applicationStatus,
             interview_date: interviewDate,
             application_date: new Date(),
