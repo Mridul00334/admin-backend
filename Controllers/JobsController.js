@@ -131,6 +131,7 @@ exports.getJobDescription= async(req,res)=>{
 
 exports.createJobApplication=async(req,res)=>{
  let{ jobId, profileId, applicationStatus, interviewDate = null}=req.body;
+ let {userId}=req.user;
  
 
 // Function to create a job application
@@ -142,7 +143,7 @@ exports.createJobApplication=async(req,res)=>{
         }
 
         // Check if the profile exists
-        const profile = await Profile.findById(profileId);
+        const profile = await Profile.findOne({userId:userId});
         if (!profile) {
             throw new Error('Profile not found');
         }
