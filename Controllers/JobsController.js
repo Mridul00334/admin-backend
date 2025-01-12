@@ -32,6 +32,7 @@ exports.getJobsList = async (req, res) =>{
 exports.getJobDescription= async(req,res)=>{
     console.log(req.body);
     let {jobId} = req.body;
+    let {userId}= req.user;
   try {
     // Aggregate the job data with its description
     const jobDetails = await Jobs.aggregate([
@@ -101,6 +102,17 @@ exports.getJobDescription= async(req,res)=>{
     //   throw new Error('Job not found');
     // }
 
+    let profile = await Profile.findOne({ userId: userId }); // Use `findOne` to get a single profile
+    console.log(profile);
+    let jobApplications;
+    if (profile) {
+    jobApplications = await JobApplication.findOne({ profile_id: profile._id });
+       console.log(jobApplications,"jobApplications");
+    } else {
+      // Handle the case where no profile was found
+      console.log('Profile not found');
+    }
+    jobDetails[0].application_status= jobApplications.application_status ? jobApplications.application_status:false;
      res.json({
       status: 'SUCCESS',
       message: 'Data fetched',
@@ -267,7 +279,7 @@ exports.updateJob = async (req, res) => {
 exports.getApplicantsList = async (req, res) => {
   try {
     const { jobId } = req.body; // Assuming the jobId is passed in the request URL as a parameter
-  
+    
     const profiles = await JobApplication.aggregate([
       {
         $match: { job_id: new mongoose.Types.ObjectId(jobId) } // Match job_id with the provided jobId in the request
