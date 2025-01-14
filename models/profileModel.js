@@ -61,7 +61,7 @@ const profileSchema = new Schema({
     required: true
   },
   resume: {
-    type: String, 
+    type: [String], 
     required: false,
     default:null
   }

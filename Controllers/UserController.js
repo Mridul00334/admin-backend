@@ -10,6 +10,8 @@ sgMail.setApiKey(process.env.SMS_API_KEY);
 const generator = require('generate-password');
 const { uploadToS3 } = require("../service/s3"); // S3 service
 const bucketName = process.env.S3_BUCKET_NAME;
+const multer = require('multer');
+const upload = multer();  
 
 const generateRandomPassword = () => {
   return generator.generate({
@@ -364,14 +366,7 @@ exports.updateProfileByUserId = async (req, res) => {
   // Initialize an object to hold the fields to be updated
   const profileData = {};
 
-  const resumeData = [];
-  if (req.files) {
-    for (const file of req.files) {
-      const key = `${Date.now()}-${file.originalname}`;
-      const result = await uploadToS3(file.buffer, bucketName, key);
-      resumeData.push(result.Location); // Store S3 URLs
-    }
-  }
+ 
 
 
   try {
@@ -496,3 +491,54 @@ exports.addCategory = async (req, res) => {
   }
 }
 
+
+exports.resumeUpload=async(req,res)=>{
+  let { userId } = req.user;  // Extract the userId from the authenticated user
+  let result;
+  console.log(req.files,"req.files");
+  try {
+  const resumeData = [];
+  let profile = await Profile.findOne({ userId: userId }); // Use `findOne` to get a single profile
+  console.log(profile);
+  
+  if (profile) {
+    if (req.file) {
+      // Process the uploaded file
+      const file = req.file;
+      const key = `${Date.now()}-${file.originalname}`; // Generate a unique key for the file
+
+      // Upload the file to S3
+      const uploadResult = await uploadToS3(file.buffer, bucketName, key);
+
+      // Push the S3 URL of the uploaded file to resumeData
+      resumeData.push(uploadResult.Location); // Add the S3 URL to the array
+    }
+
+    result = await Profile.findOneAndUpdate(
+      { userId: userId },
+      { $set: { resume: resumeData } },  // Update the resume field with new URL(s)
+      { new: true }  // Return the updated document
+    );
+
+   
+
+  }else{
+    throw new Error('Profile not found');
+  }
+
+  return res.status(200).json({
+    status:"SUCCESS",
+    message: "uploaded the resume",
+    data: result
+  });
+
+
+} catch (err) {
+  console.error('Error updating profile:', err);
+  return res.status(500).json({
+    status:"FAILURE",
+    message: "ERROR",
+    data: "Error updating profile"
+  });
+}
+}
