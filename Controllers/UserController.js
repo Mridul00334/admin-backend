@@ -357,10 +357,20 @@ exports.getProfileByUserId = async (req, res) => {
 
 exports.updateProfileByUserId = async (req, res) => {
   let { userId } = req.user;  // Extract the userId from the authenticated user
-  const { firstName, lastName, profession, qualification, specialization, professionExperience, interests, images, dob, homeTown, language } = req.body; // Extract fields from the request body
+  const { firstName, lastName, profession, qualification, specialization, professionExperience, interests, images, dob, homeTown, language,resume } = req.body; // Extract fields from the request body
 
   // Initialize an object to hold the fields to be updated
   const profileData = {};
+
+  const resumeData = [];
+  if (req.files) {
+    for (const file of req.files) {
+      const key = `${Date.now()}-${file.originalname}`;
+      const result = await uploadToS3(file.buffer, bucketName, key);
+      resumeData.push(result.Location); // Store S3 URLs
+    }
+  }
+
 
   try {
     // Build the profileData object with the provided fields
@@ -372,6 +382,7 @@ exports.updateProfileByUserId = async (req, res) => {
     if (professionExperience !== undefined) profileData.professionExperience = professionExperience;
     if (interests !== undefined) profileData.interests = interests;
     if (images !== undefined) profileData.images = images;
+    if(resume !== null || resume !== undefined) profileData.resume = resumeData;
     
     // Handle the date of birth field
     if (dob !== undefined) {
