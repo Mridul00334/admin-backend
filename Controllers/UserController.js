@@ -499,10 +499,10 @@ exports.resumeUpload=async(req,res)=>{
   try {
   const resumeData = [];
   let profile = await Profile.findOne({ userId: userId }); // Use `findOne` to get a single profile
-  console.log(profile);
+  
   
   if (profile) {
-    if (req.file) {
+    if (req.files) {
       for (const file of req.files) {
         const key = `${Date.now()}-${file.originalname}`;
         const result = await uploadToS3(file.buffer, bucketName, key);
