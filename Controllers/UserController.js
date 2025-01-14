@@ -503,15 +503,11 @@ exports.resumeUpload=async(req,res)=>{
   
   if (profile) {
     if (req.file) {
-      // Process the uploaded file
-      const file = req.file;
-      const key = `${Date.now()}-${file.originalname}`; // Generate a unique key for the file
-
-      // Upload the file to S3
-      const uploadResult = await uploadToS3(file.buffer, bucketName, key);
-
-      // Push the S3 URL of the uploaded file to resumeData
-      resumeData.push(uploadResult.Location); // Add the S3 URL to the array
+      for (const file of req.files) {
+        const key = `${Date.now()}-${file.originalname}`;
+        const result = await uploadToS3(file.buffer, bucketName, key);
+        resumeData.push(result.Location); // Store S3 URLs
+      }
     }
 
     result = await Profile.findOneAndUpdate(
