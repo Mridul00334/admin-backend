@@ -106,7 +106,7 @@ exports.getJobDescription= async(req,res)=>{
     console.log(profile);
     let jobApplications;
     if (profile) {
-    jobApplications = await JobApplication.findOne({ profile_id: profile._id });
+    jobApplications = await JobApplication.findOne({ profile_id: profile._id,job_id:jobId });
        console.log(jobApplications,"jobApplications");
     } else {
       // Handle the case where no profile was found
