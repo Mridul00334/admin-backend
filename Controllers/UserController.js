@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs');
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SMS_API_KEY);
 const generator = require('generate-password');
-const { uploadToS3 } = require("../services/s3"); // S3 service
+const { uploadToS3 } = require("../service/s3"); // S3 service
 const bucketName = process.env.S3_BUCKET_NAME;
 
 const generateRandomPassword = () => {
