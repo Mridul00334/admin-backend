@@ -14,8 +14,7 @@ const jobApplicationSchema = new Schema({
         ref: 'Profile'  // Reference to the Profile collection (students/job seekers)
     },
     application_status: {
-        type: String,
-        enum: ['Applied', 'Under Review', 'Interview', 'Offer', 'Rejected'],
+        type: Boolean,
         required: true
     },
     application_date: {
