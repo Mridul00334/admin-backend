@@ -5,7 +5,7 @@ const {deleteCategory, updateCategory}= require("../Controllers/CategoryControll
 const { authenticateToken } = require("../auth/auth");
 const multer = require('multer');
 const storage = multer.memoryStorage();  // Store files in memory for uploading
-const upload = multer({ storage: storage }).single('files');;
+const upload = multer({ storage: storage }).array('files');;
 const router = express.Router();
 
 router.post("/admin/login",loginUser);
