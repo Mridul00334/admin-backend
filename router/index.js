@@ -1,6 +1,6 @@
 const express = require("express");
 const { fetchUser,submitUser,loginUser,getProfileByUserId,getList,updateProfileByUserId, addCategory,resumeUpload } = require("../Controllers/UserController");
-const {getJobsList,getJobDescription,createJobApplication,createNewJob,updateJob,getApplicantsList}= require("../Controllers/JobsController");
+const {getJobsList,getJobDescription,createJobApplication,createNewJob,updateJob,getApplicantsList, searchJobsList}= require("../Controllers/JobsController");
 const {deleteCategory, updateCategory}= require("../Controllers/CategoryController");
 const { authenticateToken } = require("../auth/auth");
 const multer = require('multer');
@@ -24,5 +24,6 @@ router.post("/admin/addCategory",addCategory);
 router.post("/admin/deleteCategory",deleteCategory)
 router.post("/admin/updateCategory/:categoryId",updateCategory)
 router.post("/admin/uploadResume",authenticateToken,upload,resumeUpload);
+router.post("/admin/searchJobsList",authenticateToken,searchJobsList)
 module.exports = router;
 

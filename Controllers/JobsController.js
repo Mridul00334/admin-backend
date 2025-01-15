@@ -328,3 +328,42 @@ exports.getApplicantsList = async (req, res) => {
 };
 
 
+exports.searchJobsList = async (req, res) => {
+  try {
+    // Get the search terms from query parameters
+    const { job_type, job_title, company_name } = req.query;
+
+    // Create a search object to store the conditions
+    let searchConditions = {};
+
+    // Check if search term exists and apply regex for partial match
+    if (job_type) {
+      searchConditions.job_type = new RegExp(job_type, 'i'); // Case-insensitive search
+    }
+
+    if (job_title) {
+      searchConditions.job_title = new RegExp(job_title, 'i'); // Case-insensitive search
+    }
+
+    if (company_name) {
+      searchConditions.company_name = new RegExp(company_name, 'i'); // Case-insensitive search
+    }
+
+    // Query the database using search conditions
+    let data = await Jobs.find(searchConditions, { job_description: 0, createdDate: 0, updatedDate: 0 });
+
+    // Return the response with the search results
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Search results fetched",
+      data: data
+    });
+    
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "FAILURE",
+      message: "Error fetching search results"
+    });
+  }
+};
