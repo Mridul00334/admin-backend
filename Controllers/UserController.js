@@ -19,9 +19,27 @@ const generateRandomPassword = () => {
     numbers: true // Include numbers in the password
   });
 };
+function findParent(id, items) {
+  // Loop through all items at the current level
+  for (let item of items) {
+      if (String(item._id) === id) {
+          return item;  // Return the item if it matches the `id`
+      }
 
+      // If the item has children, recursively search in the list of children
+      if (item.list && item.list.length > 0) {
+          const child = findParent(id, item.list);  // Recursively search in the children
+          if (child) {
+              return child;  // Return the child if it's found in the nested list
+          }
+      }
+  }
+  return null;  // Return null if the parent is not found in this branch
+}
 
 exports.getList = async (req, res) => {
+  const { id } = req.query; 
+  
   try {
     let result = await SectionModel.aggregate([
       // Stage 2: Lookup the Information collection using `Information_ID`
@@ -84,8 +102,7 @@ exports.getList = async (req, res) => {
       }
     ]
     );
-
-
+    
     const idMap = result.reduce((acc, item) => {
       item.list = [];
       acc[item._id] = { ...item };  // Clone the item
@@ -94,21 +111,73 @@ exports.getList = async (req, res) => {
       return acc;
     }, {});
 
+    
+let children,data;
     // Step 2: Iterate through the data and nest children under their parent
+    if(!id){
+      
     result.forEach((item) => {
       if (item.childrenId) {
-        const parent = idMap[item.childrenId]; // Convert ObjectId to string
+        const parent = idMap[item.childrenId]; // Find parent by `childrenId`
         if (parent) {
-          parent.list.push(item);  // Nest the current item under its parent
+          // Push the item as an immediate child to its parent's `list`
+          parent.list.push({
+            _id: item._id,
+            type: item.type,
+            childrenId: item.childrenId,
+            title: item.title,
+            description: item.description,
+            isEnabled: item.isEnabled,
+            image: item.image
+          });
         }
       }
     });
+    
+    // Step 3: Filter out items that are not parents (i.e., they don't have a `childrenId`)
+     data = result.filter(item => !item.childrenId);
+     res.json({status:"SUCCESS",message:"data fetched", data:data})
+  }else{
+      // Modify to use your actual data fetch logic
+      result.forEach((item) => {
+        if (item.childrenId) {
+          const parent = idMap[item.childrenId]; // Convert ObjectId to string
+          if (parent) {
+            parent.list.push(item);  // Nest the current item under its parent
+          }
+        }
+      });
+      
+ let parent= findParent(id,result);
 
-    // Step 3: Filter out items that are not parents
-    const data = result.filter(item => !item.childrenId);
+    if (!parent) {
+        return res.status(404).json({ status: "ERROR", message: "Parent not found" });
+    }
 
+    // Get immediate children (level 1)
+    const firstLevelChildren = result.filter(item => String(item.childrenId) === id);
 
-    res.json({status:"SUCCESS",message:"data fetched", data:data})
+    // Get immediate children of level 1 children (level 2)
+    const secondLevelChildren = [];
+    for (const child of firstLevelChildren) {
+        const secondLevel = result.filter(item => String(item.childrenId) === String(child._id));
+        secondLevelChildren.push(...secondLevel);
+    }
+
+    // Combine level 1 and level 2 children
+     children = firstLevelChildren.map(child => {
+        // Add second-level children to each child as its `list`
+        const childrenOfChild = secondLevelChildren.filter(item => String(item.childrenId) === String(child._id));
+        return {
+            ...child,  // Include the child properties
+            list: childrenOfChild  // Add second-level children to the `list`
+        };
+    });
+    res.json({status:"SUCCESS",message:"data fetched", data:children})
+  }
+
+ 
+   
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "some error occured" })
