@@ -136,7 +136,7 @@ let children,data;
     
     // Step 3: Filter out items that are not parents (i.e., they don't have a `childrenId`)
      data = result.filter(item => !item.childrenId);
-     data = result.filter(item => item.isEnabled);
+     data = data.filter(item => item.isEnabled);
      res.json({status:"SUCCESS",message:"data fetched", data:data})
   }else{
       // Modify to use your actual data fetch logic
