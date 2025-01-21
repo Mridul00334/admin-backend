@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 // Define the schema for the InformationModel
 const informationModelSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  subTitle: { type: String, required: true },
+  subTitle: { type: String, required: false },
   description: { type: String, required: true },
   Flag: { type: String, enum: ['Active', 'Inactive'], default: 'Active' }, // Assuming 'Active' or 'Inactive' for Flag
-  mediaURL: { type: String, required: true },
+  mediaURL: { type: String, required: false },
   isVideo: { type: Boolean, required: true },  // true = video, false = image
   isEnabled: { type: Boolean, default: true }, // true = enabled, false = disabled
   createdDate: { type: Date, default: Date.now }, // Automatically set the creation date

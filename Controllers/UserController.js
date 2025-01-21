@@ -136,6 +136,7 @@ let children,data;
     
     // Step 3: Filter out items that are not parents (i.e., they don't have a `childrenId`)
      data = result.filter(item => !item.childrenId);
+     console.log("data",data);
      data = data.filter(item => item.isEnabled);
      res.json({status:"SUCCESS",message:"data fetched", data:data})
   }else{
@@ -500,12 +501,12 @@ exports.addCategory = async (req, res) => {
 
     let infodata = new InformationModel({
       title,
-      subTitle: subtitle,
+      subTitle: subtitle || "",
       description,
       Flag: "Active",
-      mediaURL: imageURL,
+      mediaURL: imageURL || "",
       isVideo: false,
-      isEnabled: enabled
+      isEnabled: enabled 
     })
     const info = await infodata.save();
 
@@ -525,7 +526,7 @@ exports.addCategory = async (req, res) => {
         Section_ID: title,
         Information_ID: info._id,
         Analytics_ID: analytic._id,
-        restrictCountry: restrictedCountries,
+        restrictCountry: restrictedCountries || [],
         createdBy: {
           firstName: "",
           lastName: ""
@@ -538,7 +539,7 @@ exports.addCategory = async (req, res) => {
         Section_ID: title,
         Information_ID: info._id,
         Analytics_ID: analytic._id,
-        restrictCountry: restrictedCountries,
+        restrictCountry: restrictedCountries || [],
         createdBy: {
           firstName: "",
           lastName: ""
