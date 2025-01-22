@@ -38,7 +38,7 @@ function findParent(id, items) {
 }
 
 exports.getList = async (req, res) => {
-  const { id } = req.query; 
+  const { id } = req.body; 
   
   try {
     let result = await SectionModel.aggregate([

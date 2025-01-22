@@ -1,5 +1,5 @@
 const express = require("express");
-const { fetchUser,submitUser,loginUser,getProfileByUserId,getList,updateProfileByUserId, addCategory,resumeUpload } = require("../Controllers/UserController");
+const { fetchUser,submitUser,loginUser,getProfileByUserId,getList,updateProfileByUserId, addCategory,resumeUpload } = require("../Controllers/UserController2");
 const {getJobsList,getJobDescription,createJobApplication,createNewJob,updateJob,getApplicantsList, searchJobsList}= require("../Controllers/JobsController");
 const {deleteCategory, updateCategory}= require("../Controllers/CategoryController");
 const { authenticateToken } = require("../auth/auth");
