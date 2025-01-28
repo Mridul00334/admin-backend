@@ -43,10 +43,16 @@ exports.addCategory = async (req, res) =>{
           analyticsEvents,
           restrictedCountries,
           enabled,
-          imageURL,
           description
         } = req.body;
-    
+
+        let imageURL=""
+        if (req.file && req.file) { // assuming the image is uploaded with the field name 'image'
+          const file = req.file;
+          const key = `${Date.now()}-${file.originalname}`;
+          const result = await uploadToS3(file.buffer, bucketName, key);
+          imageURL = result.Location; // Store the S3 URL for the uploaded image
+        }
         // Find the existing category using categoryId
         const section = await SectionModel.findById(categoryId);
         if (!section) {

@@ -20,9 +20,9 @@ router.post("/admin/createJobApplication",authenticateToken,createJobApplication
 router.post("/admin/createNewJob",authenticateToken,createNewJob)
 router.patch("/admin/updateJob/:jobId", authenticateToken, updateJob);
 router.post("/admin/getApplicantList",authenticateToken,getApplicantsList);
-router.post("/admin/addCategory",addCategory);
+router.post("/admin/addCategory",multer({ storage: storage }).single('image'),addCategory);
 router.post("/admin/deleteCategory",deleteCategory)
-router.post("/admin/updateCategory/:categoryId",updateCategory)
+router.post("/admin/updateCategory/:categoryId",multer({ storage: storage }).single('image'),updateCategory)
 router.post("/admin/uploadResume",authenticateToken,upload,resumeUpload);
 router.post("/admin/searchJobsList",authenticateToken,searchJobsList)
 module.exports = router;

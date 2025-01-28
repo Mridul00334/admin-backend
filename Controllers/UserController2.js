@@ -488,16 +488,25 @@ exports.updateProfileByUserId = async (req, res) => {
 
 exports.addCategory = async (req, res) => {
   try {
+    
     let {
       title,
       subtitle,
       analyticsEvents,
       restrictedCountries,
       enabled,
-      imageURL,
       description,
       parentKey
     } = req.body;
+   
+let imageURL=""
+    if (req.file && req.file) { // assuming the image is uploaded with the field name 'image'
+      const file = req.file;
+      const key = `${Date.now()}-${file.originalname}`;
+      const result = await uploadToS3(file.buffer, bucketName, key);
+      imageURL = result.Location; // Store the S3 URL for the uploaded image
+    }
+
 
     let infodata = new InformationModel({
       title,
@@ -508,6 +517,7 @@ exports.addCategory = async (req, res) => {
       isVideo: false,
       isEnabled: enabled 
     })
+    console.log("infoffd")
     const info = await infodata.save();
 
     const analytics = new Analytics({
@@ -518,10 +528,12 @@ exports.addCategory = async (req, res) => {
       orders: 0,
       priority: 1
     });
+   
+
 
     const analytic = await analytics.save();
     let section;
-    if (parentKey) {
+    if (parentKey !=="null") {
        section = new SectionModel({
         Section_ID: title,
         Information_ID: info._id,
@@ -548,7 +560,7 @@ exports.addCategory = async (req, res) => {
       });
     }
 
-    console.log(section)
+   
     const result = await section.save();
     res.status(200).json({
       status: "SUCCESS",
